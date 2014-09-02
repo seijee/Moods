@@ -1,0 +1,114 @@
+.navbar {
+	position:absolute; 		/* uncomment to toggle fixed/scrollable nevbar */
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:15px;
+	left: 0px; top: 0px;
+	width:100%;
+	z-index: 5000;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	padding: 0px 0px;
+	line-height: 0px;			/* should be same as above ^ */
+}
+.navbar ul:after{
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+.navbar ul {
+	background-color: black;
+	margin: 0px;
+	padding: 0px;
+	padding: 0px;
+	border: 0px;
+}
+
+.navbar #logo{
+        display:block;
+        float: left;
+        margin: 0px;
+        padding: 0 10px;
+        background: grey;
+	font-size: 30px;
+	color: white;
+	font-weight: bold;
+        overflow: hidden;
+        height: 60px;				/* navbar height is controlled from here!! */
+	line-height: 60px;			/* should be same as above ^ */
+}
+.navbar #logo a{
+    color: white;
+}
+.navbar li {
+	display: block;
+	float: right;
+	border: none;
+	margin: 0px;
+	padding:0px;
+	background: transparent;
+	text-align:center;
+	height: 60px;				/* navbar height is controlled from here!! */
+	line-height: 60px;			/* should be same as above ^ */
+}
+.navbar li a {
+	padding: 0px 15px;
+	margin: 0px;
+	color: #EBEBEB;
+	font-weight: bold;
+	text-decoration: none;
+	border: 1px solid transparent;
+	/*overflow: hidden;*/
+	display: block;
+	height: 100%;
+        transition-duration:0.2s;
+	-webkit-transition-duration:0.2s;
+        -moz-transition-duration:0.2s;
+        -o-transition-duration:0.2s;
+        -ms-transition-duration:0.2s;
+}
+.navbar li a:hover{
+	background:  #0099CC;
+	border: 1px solid white;
+	color: white;
+}
+
+
+
+
+/*This is when screen is full sized!!*/
+        #nav-control{
+            display: none;
+        }
+	.navbar {
+		width: 100%;
+		/*margin: 0px 0px 0px 0px;*/
+	}
+	.navbar ul{
+		padding: 0px 10%;
+		height: auto;
+	}
+
+	
+@media screen and (max-width: 540px) {
+        #nav-control{
+            display: block;
+            position: absolute;
+            float: right;
+            color: white;
+            top:0px; right: 10px;
+        }
+	.navbar li,.navbar #logo {
+            width: 100%;
+            margin: 0px;
+	}
+        .navbar #logo{
+            padding: 0px 20px;
+        }
+	.navbar ul {
+		margin: 0px;
+		padding: 0px 0%;
+	}
+}
