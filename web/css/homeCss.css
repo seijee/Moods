@@ -1,15 +1,52 @@
 body{
     position: absolute;
-        left:0px; right: 0px;
+    left:0px; right: 0px;
         top:0px; bottom: 0px;
 	padding: 0px;
 	margin: 0px;
-        /*background-image: url('http://www.easyvectors.com/assets/images/vectors/afbig/outline-smiley-icons-clip-art.jpg');*/
-        background-size: cover;
-        background-repeat: no-repeat;
+        //background-image: url('http://images.all-free-download.com/images/graphiclarge/roystonlodge_hex_grid_for_role_playing_game_maps_clip_art_24080.jpg');
+        background-size: 50%;
+        background-repeat: repeat;
 }
 a{
     text-decoration: none;
+}
+
+#accordion{
+    width: 100%;
+    margin: 0px;
+    margin-top: 60px;
+    margin-bottom: -150px;
+    height: 60%;
+    color: white;
+    text-shadow: 0px 1px 4px rgba(0, 0, 0, 1);
+    background-image: url('http://sourcefed.com/wp-content/uploads/2013/10/inception.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-box-shadow: 0px 40px 60px 3px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 40px 60px 3px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 40px 60px 3px rgba(50, 50, 50, 0.75);
+}
+#accordion > .tile-area > h1{
+    font-size: 3em;
+    text-shadow: 0px 1px 4px rgba(0, 0, 0, 1);
+}
+.hex {
+    
+}
+.hex:hover .fil0{fill:#373435;fill-opacity:0}
+.str0 {stroke:#ff0000;stroke-width:27.7756;stroke-opacity:0.7}
+.fil1 {fill:#FEFEFE}
+.fil0 {fill:#FFFFFF;fill-opacity:0.5;}
+.fnt0 {font-weight:normal; text-align: center; font-size:333.335px;font-family:'Arial'}
+.hidden{display: none;}
+
+#hexGrid{
+    position: absolute;
+    width: 60%;
+    margin: 0 18% 0 22%;
+    bottom: 1%;
 }
 
 .tile-area {
@@ -17,7 +54,7 @@ a{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size:15px;
 	width: 100%;
-        top: 65px;
+        /*top: 65px;*/
 }
 .tile-area:after{
 	visibility: hidden;
@@ -31,124 +68,18 @@ a{
 ::-op-selection {background:transparent;}
 ::-ms-selection {background:transparent;}
 /*********************** tile *********************/
-.tile-area > .tile {
-	margin: 0 0;
-	left: 0%;
-	float: left;
-	position: relative;
-	border: none;
-	text-decoration: none;
-}
-.tile-area > .tile:after{
-	display: block;
-	content: '';
-}
 
 
 
-/* displaying five tiles per row... default */
-	/* setting the width of each tile type */
-	.tile-area > .tile{width: 33.333333%;}
-	.tile-area > .tile.double { width: 66.666667%;}
-	.tile-area > .tile.quad { width: 66.666667%;}
-
-	/* setting the height of each tile type relative to its width */
-	.tile-area > .tile:after {padding-top: 100%;}
-	.tile-area > .tile.double:after {padding-top: 50%;} /*not square because of rounding problem */
-	.tile-area > .tile.quad:after {padding-top: 100%;} /*not square because of rounding problem */
 
 @media screen and (max-width: 440px) {
-    /* setting the width of each tile type */
-	.tile-area > .tile{width: 50%;}
-	.tile-area > .tile.double { width: 100%;}
-	.tile-area > .tile.quad { width: 100%;}
 
-	/* setting the height of each tile type relative to its width */
-	.tile-area > .tile:after {padding-top: 100%;}
-	.tile-area > .tile.double:after {padding-top: 49.8%;} /*not square because of rounding problem */
-	.tile-area > .tile.quad:after {padding-top: 49.8%;} /*not square because of rounding problem */
-        
 }
 @media screen and (min-width: 800px) {
-    
 	.tile-area {
-		width: 70%;
+		width: 80%;
 		margin:0 auto; 
 	}
-
-	/* setting the width of each tile type */
-	.tile-area > .tile{width: 33.3333%;}
-	.tile-area > .tile.double { width: 40%;}
-	.tile-area > .tile.quad {
-		width: 40%;
-		float: right;
-	}
-
-	/* setting the height of each tile type relative to its width */
-	.tile-area > .tile:after {padding-top: 60%;}
-	.tile-area > .tile.double:after {padding-top: 50%;}
-	.tile-area > .tile.quad:after {padding-top: 100%;}
-}
-
-
-
-/******************** tile-content ********************/
-.tile-area > .tile > .tile-content {
-	position: absolute;
-	left: 12px; right: 12px; top: 12px; bottom: 12px;
-        /*left: 0px; right: 0px; top: 0px; bottom: 0px;*/
-	/*border: 5px solid white;*/
-	background-size:cover;
-	background-repeat: no-repeat;
-	background-position: center;
-	margin: 0px;
-        overflow: hidden;
-}
-.tile-area > .tile > .tile-content:hover{
-	border: 0px solid white;
-	margin: -4px;/*set the cell border*/
-        z-index: 1000;
-}
-.tile-area > .tile > .tile-content{
-	-webkit-transition-duration:0.3s;
-           -moz-transition-duration:0.3s;
-            -ms-transition-duration:0.3s;
-             -o-transition-duration:0.3s;
-                transition-duration:0.3s;
-}
-
-/********************* title *********************/
-.tile-area > .tile > .tile-content > .title{
-	position: absolute;
-	left:0px; right:0px;top:2em;
-	color: white;
-	text-align:center;
-	overflow: hidden;
-	height: 1.1em;
-	font-size:2em;
-	padding: .2em 2px;
-	background-color: rgba(0,0,0,0.0);
-	
-    /* transition for various browsers  */
-	-webkit-transition-duration:0.2s;
-           -moz-transition-duration:0.2s;
-            -ms-transition-duration:0.2s;
-             -o-transition-duration:0.2s;
-                transition-duration:0.2s;
-}
-.tile-area > .tile > .tile-content > .title > .moodDescription{
-    font-size: 0.5em;
-    line-height: 1em;
-}
-.tile-area > .tile > .tile-content:hover > .title > .moodDescription{
-    line-height: 1em;
-}
-.tile-area > .tile > .tile-content:hover > .title{
-        top:0em;
-        /*height: auto;*/
-        height: 100%;
-	padding: .2em 6px;
-	background-color: rgb(0,153,204);
 }
 
 /************************************CG ka metro wala kamal khatam************************************************************/

@@ -21,6 +21,14 @@
     </head>
     <body>
         <%@include file="_components/navbar.jsp" %>
+        <div id="accordion">
+            <div class="tile-area">
+                <br/><br/>
+                <h1>Welcome to Movie on Moods</h1>
+                <p id="description">The Ultimate Movie Suggestion Solution</p>
+            </div>
+        </div>
+        <%@include file="_components/hexGrid.jsp" %>
         <div id="backdrop" onclick="hideModal()">
             <div class="modal" onclick="event.stopPropagation();" id='myModal'>
                 <div class='bgImage'></div>
@@ -28,42 +36,19 @@
                 <i onclick='hideModal()' class="close fa fa-times fa-1x"></i>
             </div>
         </div>
-        <%
-        String[] urls = {
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg",
-        "http://www.quotewallpapers.net/media/bgs_320x180/1/84-792503859.jpg"
-        };%>
-        <div class="tile-area">
-        <% for(int i=0; i<9; i++){ %>
-        <a href="content.jsp" style="display:none" class="tile">
-            <div class="tile-content" style="background-image: url('<%=urls[i]%>'); ">
-                <div class="title">
-                    <b> Mood Title</b><br/>
-                    <p class="moodDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a blandit quam, eget consectetur lectus. Nam sed rutrum dolor, eget hendrerit nunc. Vivamus sagittis, nisi at malesuada porttitor, diam nibh mattis sapien, id pellentesque quam dolor vestibulum ante, vel fringilla puru</p>
-                </div>
-            </div>
-        </a>
-        <% } %>
-        </div>
-        </div>
+        
         <script src="./js/jquery-1.11.1.js"></script>
         <script src="./js/Modal.js"></script>
         <script>
 //initial fade effect of tiles
 $(window).load(function(){
     $i=0;
-    $(".tile").each(function (e){
-        $(this).delay($i*25).fadeIn(800);
+    $(".hex").each(function (e){
         $i++;
+        $(this).mouseover(
+        function (){
+            $("#description").text($(this).find('.description').text());
+        });
     });
 });
         </script>
