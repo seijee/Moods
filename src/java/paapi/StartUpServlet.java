@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-/**
+/***
  * Servlet implementation class StartupServlet
  */
 @WebServlet("/StartupServlet")

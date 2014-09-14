@@ -10,11 +10,12 @@
 <%
     int id = Integer.parseInt(request.getParameter("id"));
     List<ImdbData> list = ImdbDBController.getCache();
-    Thread.sleep(1500); //fake network latency
-    for (ImdbData movie : list){
-        if (movie.getId() == id){
-            response.getWriter().print(movie.getTitle());
-            break;
-        }
+    Thread.sleep(1000); //fake network latency
+    ImdbData myMovie = new ImdbData(id);
+    
+    if (list.contains(myMovie)){
+        int i = list.indexOf(myMovie);
+        myMovie = list.get(i);
+        response.getWriter().print(myMovie.getTitle());
     }
 %>

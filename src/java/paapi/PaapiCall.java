@@ -20,13 +20,19 @@
  */
 
 package paapi;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import objects.MovieDetails;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -47,7 +53,7 @@ public class PaapiCall {
         /*
          * Set up the signed requests helper 
          */
-    //****************POROXY SETTINGS***********************/
+    /****************POROXY SETTINGS**********************
         String host = "172.16.0.87";
         String port = "8080";
         System.out.println("Using proxy: " + host + ":" + port);
@@ -94,9 +100,7 @@ public class PaapiCall {
         // Here is an example with string form, where the requests parameters have already been concatenated
         // into a query string.
 //</editor-fold>
-//        title = "";
-//        actor = "";
-//        keywords="Paan Singh Tomar";
+
         LOG.info("String form example:");
         String queryString = "Service=AWSECommerceService&AssociateTag=taqa&" +
                             "Operation=ItemSearch&" +
@@ -123,27 +127,19 @@ public class PaapiCall {
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(requestUrl);
             NodeList nodeList = doc.getChildNodes();
-            recurse(nodeList.item(0).getChildNodes(), 0);
+            
+            //recurse(nodeList.item(0).getChildNodes(), 0);
             nodeList = nodeList.item(0).getChildNodes().item(1).getChildNodes(); //All the Items in nodeList
+            
             LOG.info ("totalResults = "+nodeList.item(1).getFirstChild().getNodeValue());
-            String asin, detailPageURL;
+            String asin, detailPageURL, Description;
             int totalResults = Integer.parseInt(nodeList.item(1).getFirstChild().getNodeValue());
-            for (int i= 4; i<totalResults && i<14; i++){
+            System.out.println(totalResults);
+            for (int i= 4; i<nodeList.getLength()/*(totalResults+4) && i<14*/; i++){
                 md = new MovieDetails();
-                asin = nodeList.item(i).getChildNodes().item(0).getFirstChild().getNodeValue();
-                detailPageURL = (nodeList.item(i).getChildNodes().item(1).getFirstChild().getNodeValue());
-                System.out.println("ASIN : "+asin);
-                System.out.println("URL  : "+detailPageURL);
-                System.out.println(nodeList.item(i).getChildNodes().item(3).getNodeName());
-                NodeList attributes = nodeList.item(i).getChildNodes().item(7).getChildNodes();
-                for (int j = 0; j<attributes.getLength(); j++){
-                    if (attributes.item(j).getNodeName().equalsIgnoreCase("title")){
-                        md.setTitle(attributes.item(j).getFirstChild().getNodeValue());
-                    }
-                }
-                md.setAsin(asin);
-                md.setDetailPage(detailPageURL);
+                fetchDetails(nodeList.item(i).getChildNodes(), md);
                 mdl.add(md);
+                System.out.println("/**********************/");
             }
         } catch (Exception e) {
         	LOG.error(" ",e);
@@ -151,6 +147,66 @@ public class PaapiCall {
         }
         return mdl;
     }
+    public static void fetchDetails (NodeList movie, MovieDetails md){
+        for(int i=0; i<movie.getLength() ; i++){
+            if (movie.item(i).getNodeName().equalsIgnoreCase("title")){
+                md.setTitle(movie.item(i).getFirstChild().getNodeValue());
+                System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("ASIN")){
+                md.setAsin(movie.item(i).getFirstChild().getNodeValue());
+                System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("DetailPageURL")){
+                md.setDetailPage(movie.item(i).getFirstChild().getNodeValue());
+                System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("Binding")){
+                md.setAmazonBinding(movie.item(i).getFirstChild().getNodeValue());
+                System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("ProductTypeName")){
+                md.setProductType(movie.item(i).getFirstChild().getNodeValue());
+                System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("FormattedPrice")){
+                md.setPrice(movie.item(i).getFirstChild().getNodeValue());
+                System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("ProductGroup")){
+                //md.setProductType(movie.item(i).getFirstChild().getNodeValue());
+                System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("ItemLinks")){
+                //md.setProductType(movie.item(i).getFirstChild().getNodeValue());
+                //System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("EditorialReview")){
+                String description = "";
+                NodeList Descriptions = movie.item(i).getChildNodes();
+                for (int j=0; j<Descriptions.getLength();j++){
+                    if (Descriptions.item(j).getNodeName().equalsIgnoreCase("source")){
+                        description += Descriptions.item(j).getNodeName()+": ";
+                        description += Descriptions.item(j).getFirstChild().getNodeValue()+",\n";
+                    }else
+                    if (Descriptions.item(j).getNodeName().equalsIgnoreCase("content")){
+                        description += Descriptions.item(j).getFirstChild().getNodeValue()+"\n----";
+                    }
+                    //System.out.println(Descriptions.item(j).getNodeName());
+                }
+                System.out.println(description);
+                md.setDescription(description);
+            }
+            else{
+                //System.out.print(movie.item(i).getNodeType()+") "+movie.item(i).getNodeName());
+                //System.out.println(" = "+movie.item(i).getNodeValue());
+                fetchDetails(movie.item(i).getChildNodes(), md);
+            }
+    	}
+        //System.out.println("/*************************************/");
+    }
+    
+    
     public static void recurse(NodeList root, int depth){
     	for(int i=0; i<root.getLength() ; i++){
             String s = "";

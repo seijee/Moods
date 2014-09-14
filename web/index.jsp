@@ -28,7 +28,9 @@
                 <p id="description">The Ultimate Movie Suggestion Solution</p>
             </div>
         </div>
+        <div id="hexGridWrapper">
         <%@include file="_components/hexGrid.jsp" %>
+        </div>
         <div id="backdrop" onclick="hideModal()">
             <div class="modal" onclick="event.stopPropagation();" id='myModal'>
                 <div class='bgImage'></div>

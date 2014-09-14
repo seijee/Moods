@@ -13,16 +13,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author seijee
  */
 @Entity
+@Table(name = "MovieDetails")
+@XmlRootElement
 public class MovieDetails implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "MovieId")
     private Integer id;
     @Basic(optional = false)
     @Column(name = "DESCRIPTION")
@@ -32,26 +36,46 @@ public class MovieDetails implements Serializable {
     private String title;
     @Basic(optional = false)
     @Column(name = "PRICE")
-    private Float price;
+    private String price;
     @Basic(optional = false)
     @Column(name = "ASIN")
     private String asin;
     @Basic(optional = false)
     @Column(name = "DETAILPAGE")
     private String detailPage;
+    @Basic(optional = false)
+    @Column(name = "AmazonBinding")
+    private String amazonBinding;
+    @Basic(optional = false)
+    @Column(name = "AmazonResponse")
+    private String response;
+
+    private String productType;
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
     
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public String getDetailPage() {
-        return detailPage;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setDetailPage(String detailPage) {
-        this.detailPage = detailPage;
-    }
-    
     public String getTitle() {
         return title;
     }
@@ -60,11 +84,11 @@ public class MovieDetails implements Serializable {
         this.title = title;
     }
 
-    public Float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -76,18 +100,32 @@ public class MovieDetails implements Serializable {
         this.asin = asin;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getDetailPage() {
+        return detailPage;
+    }
+
+    public void setDetailPage(String detailPage) {
+        this.detailPage = detailPage;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    public String getAmazonBinding() {
+        return amazonBinding;
+    }
+
+    public void setAmazonBinding(String amazonBinding) {
+        this.amazonBinding = amazonBinding;
     }
     
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -110,6 +148,9 @@ public class MovieDetails implements Serializable {
 
     @Override
     public String toString() {
-        return "<p>objects.MovieDetails[ Title=" + title + " ][ <a href='"+ detailPage +"'>Detail Page</a> ]</p>";
+        return "<p>Title=<b>" + title + "</b><a href='"+ detailPage +"'>Detail Page</a> ]<br/>"+
+                "Price ="+price+"<br/>"+amazonBinding
+                +"</p>"+
+                description;
     }
 }

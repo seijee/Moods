@@ -15,10 +15,10 @@
         <h1>Hello World!</h1>
         <%
             if (request.getParameter("keyWords")!=null){
-            String title = request.getParameter("title");
-            String actor = request.getParameter("actor");
-            String keyWords = request.getParameter("keyWords");
-            response.getWriter().print(paapi.PaapiCall.itemSearch(title, actor, keyWords));
+                String title = request.getParameter("title");
+                String actor = request.getParameter("actor");
+                String keyWords = request.getParameter("keyWords");
+                response.getWriter().print(paapi.PaapiCall.itemSearch(title, actor, keyWords));
             }
         %>
         <form action="#">

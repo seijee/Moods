@@ -16,9 +16,8 @@
  *  Signed Requests Sample Code
  *
  *  API Version: 2009-03-31
- *
+ **
  */
-
 package paapi;
 
 
@@ -139,7 +138,7 @@ public class PAAPIWrapper {
             movieDetails.setAsin(asin);
             movieDetails.setDetailPage(detailPageUrl.getTextContent());
             //movieDetails.setImage(url.getTextContent());
-            movieDetails.setPrice(Float.parseFloat(formattedPrice.getTextContent().substring(1)));
+            movieDetails.setPrice(formattedPrice.getTextContent().substring(1));
             movieDetails.setTitle(title.getTextContent());
             
             

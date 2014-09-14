@@ -58,7 +58,8 @@ public class ImdbData implements Serializable {
     @Basic(optional = false)
     @Column(name = "GENRE")
     private String genre;
-
+    
+    
     public ImdbData() {
     }
 

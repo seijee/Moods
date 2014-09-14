@@ -20,12 +20,12 @@
     </style>
 </head>
 <body>
-    <svg id="hexGrid" style="" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-viewBox="0 0 1200 520"
+    <svg id="hexGrid" xmlns="http://www.w3.org/2000/svg"  version="1.1"
+viewBox="0 0 1100 410" preserveAspectRatio="xMidYMid meet"
  xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs id="svgDefs">
     </defs>
- </svg>
+    </svg>
     
     <script>
         function createLink (title,description,bgImg,href,id,x,y,width){
@@ -34,7 +34,7 @@ viewBox="0 0 1200 520"
             
             var image = document.createElementNS("http://www.w3.org/2000/svg", 'image');
             image.setAttributeNS(null,'width',width);
-            height = width/0.866025;
+            var height = width/0.866025;
             image.setAttributeNS(null,'height',height);
             image.setAttributeNS(null,'id','img'+id);
             image.setAttributeNS('http://www.w3.org/1999/xlink','href',bgImg);
@@ -60,8 +60,8 @@ viewBox="0 0 1200 520"
         }
         function createHexagon(x,y,a){
             a = a/1.73205080757;
-            root3aBy2 = a*0.866025;
-            aBy2 = a/2;
+            var root3aBy2 = a*0.866025;
+            var aBy2 = a/2;
             
             points =         x        +","+  (a+y)    + " ";
             points += (root3aBy2+x)   +","+  (aBy2+y) + " ";
@@ -76,7 +76,7 @@ viewBox="0 0 1200 520"
             
             return hexagon;
         }
-        function createHexagon1(x,y,a){
+        function createHexagon1(x,y,a){ // to be used for horiz hexagons
             root3aBy2 = a*0.866025;
             aBy2 = a/2;
             
@@ -97,7 +97,7 @@ viewBox="0 0 1200 520"
         var mySVG = document.getElementById("hexGrid");
         width= 200;padding = 5;
         h = width/2; v=(width/0.866025);
-        row=1;count=0;
+        row=0.5;count=0;
         <%for (int i=0; i<10; i++){%>
             mySVG.appendChild(createLink("title","description","./img/hex.jpg","href","id"+count, h  , row*v,width-padding));
             h+=width;count++;
@@ -110,30 +110,30 @@ viewBox="0 0 1200 520"
         width= 200;padding = 5;
         h = width/2; v=(width*1.73205080757)/4;
         row=0;count=0;
-        <%for (int i=0; i<2; i++){%>
-        <% if (i==1){%>
+        <%//for (int i=0; i<2; i++){%>
+        <%// if (i==1){%>
         
-        <%}%>
+        <%//}%>
             
         mySVG.appendChild(createLink("title","description","href","id"+count,  h  , row+ v,width-padding));
         count++;
-        <% if (i!=1){%>
+        <%// if (i!=1){%>
             mySVG.appendChild(createLink("title","description","href","id"+count,2.5*h, row+2*v,width-padding));
             count++;
-        <%}%>
+        <%//}%>
         mySVG.appendChild(createLink("title","description","href","id"+count,  4*h, row+v,width-padding));
         count++;
-        <% if (i!=1){%>
+        <%// if (i!=1){%>
         mySVG.appendChild(createLink("title","description","href","id"+count,5.5*h, row+2*v,width-padding));
         count++;
-        <%}%>
+        <%//}%>
         mySVG.appendChild(createLink("title","description","href","id"+count,  4*h, row+v,width-padding));
         count++;
         mySVG.appendChild(createLink("title","description","href","id"+count,7*h, row+v,width-padding));
         count++;
         
         row+=2*v;
-        <% } %>
+        <%// } %>
         */
 </script>
 
