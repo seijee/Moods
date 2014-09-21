@@ -165,12 +165,11 @@ public class ImdbData implements Serializable {
     @Override
     public String toString() {
         String sb = "Id : "+id;
-        sb += "\nIMDB ID : "+imdbId;
-        sb += "\nTitle : "+title;
-        sb += "\nGenre : "+genre;
-        sb += "\nActors : "+actors;
-        sb += "\nImage Url : "+image;
+        sb += "<br/>\nIMDB ID : "+imdbId;
+        sb += "<br/>\nTitle : "+title;
+        sb += "<br/>\nGenre : "+genre;
+        sb += "<br/>\nActors : "+actors;
+        sb += "<br/>\nImage Url : "+image;
         return sb;
     }
-    
 }

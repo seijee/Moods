@@ -4,7 +4,15 @@
     Author     : seijee
 --%>
 
-<%@page import="objects.MovieDetails"%>
+<%@page import="java.io.ByteArrayOutputStream"%>
+<%@page import="java.io.InputStream"%>
+<%@page import="paapi.ImageGrabber"%>
+<%@page import="controllers.ImdbDBController"%>
+<%@page import="java.net.URL"%>
+<%@page import="org.apache.log4j.*"%>
+<%@page import="java.io.BufferedInputStream"%>
+<%@page import="java.io.FileOutputStream"%>
+<%@page import="objects.MovieProduct"%>
 <%@page import="java.util.List"%>
 <%@page import="objects.ImdbData"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -21,7 +29,7 @@
         </form>
         <div>
         <%
-            if (request.getParameter("search")!=null){
+            /*if (request.getParameter("search")!=null){
                 int id = Integer.parseInt(request.getParameter("id"));
                 List<ImdbData> list = controllers.ImdbDBController.getCache();
                 ImdbData myMovie = new ImdbData(id);
@@ -29,15 +37,16 @@
                 if (list.contains(myMovie)){
                     myMovie = list.get(list.indexOf(myMovie));
                 }
-                List<MovieDetails> mdList = paapi.PaapiCall.itemSearch(myMovie.getTitle(), "", "");
+                List<MovieProduct> mdList = paapi.PaapiCall.itemSearch(myMovie.getTitle(), "", "");
                 response.getWriter().print(myMovie);
                 response.getWriter().print("<hr/>");
-                response.getWriter().print(mdList.size());
-                for (MovieDetails md : mdList){
+                for (MovieProduct md : mdList){
                     response.getWriter().print(md);
                     response.getWriter().print("<hr/>");
                 }
-            }
+            }*/
+            paapi.ImageGrabber im = new ImageGrabber();
+            
         %>
         </div>
     </body>

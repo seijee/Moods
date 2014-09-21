@@ -13,15 +13,15 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="./css/cg-metro.css" />
-        <link rel="stylesheet" href="./css/navbar.css" />
-        <link rel="stylesheet" href="./css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../css/cg-metro.css" />
+        <link rel="stylesheet" href="../css/navbar.css" />
+        <link rel="stylesheet" href="../css/font-awesome.min.css" />
         <title>Home</title>
     </head>
     <body>
         <div class="navbar" >
             <ul>
-                <li id="logo"><a href="./"> Moods </a></li>
+                <li id="logo"><a href="../"> Moods </a></li>
                 <li><a href="#">Option One</a></li>
                 <li><a onclick="hideModal()">Option One</a></li>
             </ul>
@@ -45,6 +45,7 @@
         <%
             ImdbDBController.UpdateMovieCache();
             List<ImdbData> rest = ImdbDBController.getCache();
+            rest.clear();
         %>
         Done!
         </div>
@@ -56,8 +57,8 @@
             <i class="fa fa-chevron-right fa-5x"></i>
         </a>
         <p id="res"></p>
-        <script src="./js/jquery-1.11.1.js"></script>
-        <script src="./js/Modal.js"></script>
+        <script src="../js/jquery-1.11.1.js"></script>
+        <script src="../js/Modal.js"></script>
         <script>
 //initial fade effect of tiles
 $(window).load(function(){

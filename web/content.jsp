@@ -71,7 +71,7 @@
         <script src="./js/Modal.js"></script>
         <script>
 //initial fade effect of tiles
-$(window).load(function(){
+$(document).ready(function(){
     $i=0;
     $(".tile").each(function (e){
         $(this).delay($i*25).fadeIn(800);

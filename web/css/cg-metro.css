@@ -140,6 +140,7 @@ a{
 .p-navigation{
     text-decoration: none;
     margin: 5px;
+    color: black;
 }
 .p-navigation.right{
     position: fixed;
@@ -154,7 +155,7 @@ a{
 
 #backdrop{
     display: none;
-    position:fixed;
+    position: fixed;
     top:0px;bottom: 0px;
     left: 0px; right:0px;
     z-index: 4900;
@@ -165,10 +166,10 @@ a{
 .modal{
     display: none;
     position: absolute;
-    left:25%; top:80px;
+    left:14%; top:80px;
     z-index: 4950;
-    width: 50%;
-    margin: 0px;
+    width: 70%;
+    margin: 0px ;
     padding: 15px;
     text-align: justify;
     background: rgb(255,255,255);

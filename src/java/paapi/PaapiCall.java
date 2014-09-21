@@ -33,7 +33,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import objects.MovieDetails;
+import objects.MovieProduct;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -49,7 +49,7 @@ public class PaapiCall {
 
     private static final String ENDPOINT = "ecs.amazonaws.com";
 
-    public static List<MovieDetails> itemSearch(String title, String actor, String keywords) {
+    public static List<MovieProduct> itemSearch(String title, String actor, String keywords) {
         /*
          * Set up the signed requests helper 
          */
@@ -107,8 +107,9 @@ public class PaapiCall {
                             "Keywords="+keywords+"&"+
                             "Title="+title+"&" +
                             "Actor="+actor+"&"+
+                            "Condition=New&"+
                             "SearchIndex=Video&"+
-                            "ResponseGroup=EditorialReview,Images,ItemAttributes";
+                            "ResponseGroup=Images,ItemAttributes,EditorialReview,OfferSummary";
         requestUrl = helper.sign(queryString);
         LOG.info("Request is \"" + requestUrl + "\"");
 
@@ -119,9 +120,9 @@ public class PaapiCall {
      * Utility function to fetch the response from the service and extract the
      * title from the XML.
      */
-    private static List<MovieDetails> parseXML(String requestUrl) {
-        ArrayList<MovieDetails> mdl = new ArrayList<MovieDetails>();
-        MovieDetails md = null;
+    private static List<MovieProduct> parseXML(String requestUrl) {
+        ArrayList<MovieProduct> mdl = new ArrayList<MovieProduct>();
+        MovieProduct md = null;
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -136,7 +137,7 @@ public class PaapiCall {
             int totalResults = Integer.parseInt(nodeList.item(1).getFirstChild().getNodeValue());
             System.out.println(totalResults);
             for (int i= 4; i<nodeList.getLength()/*(totalResults+4) && i<14*/; i++){
-                md = new MovieDetails();
+                md = new MovieProduct();
                 fetchDetails(nodeList.item(i).getChildNodes(), md);
                 mdl.add(md);
                 System.out.println("/**********************/");
@@ -147,9 +148,16 @@ public class PaapiCall {
         }
         return mdl;
     }
-    public static void fetchDetails (NodeList movie, MovieDetails md){
+    public static void fetchDetails (NodeList movie, MovieProduct md){
         for(int i=0; i<movie.getLength() ; i++){
-            if (movie.item(i).getNodeName().equalsIgnoreCase("title")){
+            
+            if (movie.item(i).getNodeName().equalsIgnoreCase("ItemLinks")){
+                //ignoring item links
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("ImageSets")){
+                // Ignoring Image sets as of Now...
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("title")){
                 md.setTitle(movie.item(i).getFirstChild().getNodeValue());
                 System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
             }
@@ -158,44 +166,51 @@ public class PaapiCall {
                 System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
             }
             else if (movie.item(i).getNodeName().equalsIgnoreCase("DetailPageURL")){
-                md.setDetailPage(movie.item(i).getFirstChild().getNodeValue());
+                md.setDetailPageUrl(movie.item(i).getFirstChild().getNodeValue());
                 System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
             }
             else if (movie.item(i).getNodeName().equalsIgnoreCase("Binding")){
-                md.setAmazonBinding(movie.item(i).getFirstChild().getNodeValue());
+                md.setBinding(movie.item(i).getFirstChild().getNodeValue());
                 System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
             }
             else if (movie.item(i).getNodeName().equalsIgnoreCase("ProductTypeName")){
                 md.setProductType(movie.item(i).getFirstChild().getNodeValue());
                 System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
             }
-            else if (movie.item(i).getNodeName().equalsIgnoreCase("FormattedPrice")){
-                md.setPrice(movie.item(i).getFirstChild().getNodeValue());
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("LargeImage")){
+                md.setImagelink(movie.item(i).getFirstChild().getFirstChild().getNodeValue());
+            }
+            else if (movie.item(i).getNodeName().equalsIgnoreCase("OfferSummary")){
+                NodeList offerSummary = movie.item(i).getChildNodes();
+                
+                for (int j=0; j<offerSummary.getLength(); j++){
+                    if (offerSummary.item(j).getNodeName().equalsIgnoreCase("LowestNewPrice")){
+                        md.setPrice(offerSummary.item(j).getChildNodes().item(2).getFirstChild().getNodeValue());
+                    }
+                }
+                //md.setPrice(movie.item(i).getFirstChild().getNodeValue());
                 System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
             }
             else if (movie.item(i).getNodeName().equalsIgnoreCase("ProductGroup")){
-                //md.setProductType(movie.item(i).getFirstChild().getNodeValue());
+                md.setProductGroup(movie.item(i).getFirstChild().getNodeValue());
                 System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
             }
-            else if (movie.item(i).getNodeName().equalsIgnoreCase("ItemLinks")){
-                //md.setProductType(movie.item(i).getFirstChild().getNodeValue());
-                //System.out.println(movie.item(i).getNodeName()+"="+movie.item(i).getFirstChild().getNodeValue());
-            }
             else if (movie.item(i).getNodeName().equalsIgnoreCase("EditorialReview")){
-                String description = "";
+                String description = "NA";
+                String source = "NA";
                 NodeList Descriptions = movie.item(i).getChildNodes();
                 for (int j=0; j<Descriptions.getLength();j++){
                     if (Descriptions.item(j).getNodeName().equalsIgnoreCase("source")){
-                        description += Descriptions.item(j).getNodeName()+": ";
-                        description += Descriptions.item(j).getFirstChild().getNodeValue()+",\n";
+                        //source = Descriptions.item(j).getNodeName()+": ";
+                        source = Descriptions.item(j).getFirstChild().getNodeValue()+"\n";
                     }else
                     if (Descriptions.item(j).getNodeName().equalsIgnoreCase("content")){
-                        description += Descriptions.item(j).getFirstChild().getNodeValue()+"\n----";
+                        description = Descriptions.item(j).getFirstChild().getNodeValue()+"\n----";
                     }
                     //System.out.println(Descriptions.item(j).getNodeName());
                 }
                 System.out.println(description);
-                md.setDescription(description);
+                md.addNewDescription(source, description);
             }
             else{
                 //System.out.print(movie.item(i).getNodeType()+") "+movie.item(i).getNodeName());

@@ -23,7 +23,7 @@ package paapi;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import objects.MovieDetails;
+import objects.MovieProduct;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -99,13 +99,13 @@ public class PAAPIWrapper {
         new PAAPIWrapper().callPAAPI("B00D9EPI38");
     }
 	
-	public MovieDetails callPAAPI(String asin){
+	public MovieProduct callPAAPI(String asin){
 		
 		String queryString = "Service=AWSECommerceService&AssociateTag=taqa&Condition=New&IdType=ASIN&ItemId="+asin+"&Operation=ItemLookup&ResponseGroup=Images%2CItemAttributes%2COffers&Version=";
 		String requestUrl = helper.sign(queryString);
 		LOG.info("Request is \"" + requestUrl + "\"");
 		
-		MovieDetails movieDetails = new MovieDetails();
+		MovieProduct movieDetails = new MovieProduct();
 		parseXML(asin, requestUrl, movieDetails);
 		LOG.info("ASIN details are : "+movieDetails);
 		return movieDetails;
@@ -115,7 +115,7 @@ public class PAAPIWrapper {
      * Utility function to fetch the response from the service and extract the
      * title from the XML.
      */
-    private MovieDetails parseXML(String asin, String requestUrl, MovieDetails movieDetails) {
+    private MovieProduct parseXML(String asin, String requestUrl, MovieProduct movieDetails) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -136,7 +136,7 @@ public class PAAPIWrapper {
             Node formattedPrice = getNode("FormattedPrice", lowestNewPrice.getChildNodes());
             
             movieDetails.setAsin(asin);
-            movieDetails.setDetailPage(detailPageUrl.getTextContent());
+            movieDetails.setDetailPageUrl(detailPageUrl.getTextContent());
             //movieDetails.setImage(url.getTextContent());
             movieDetails.setPrice(formattedPrice.getTextContent().substring(1));
             movieDetails.setTitle(title.getTextContent());

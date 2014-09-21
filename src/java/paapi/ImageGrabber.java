@@ -2,13 +2,11 @@ package paapi;
 
 import controllers.ImdbDBController;
 import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,8 +15,8 @@ import objects.ImdbData;
 
 public class ImageGrabber {
 
-    public static void main(String[] args) throws IOException {
-        //****************POROXY SETTINGS***********************/
+    public static void grab(String[] args) throws IOException {
+        /****************POROXY SETTINGS***********************
         String host = "172.16.0.87";
         String port = "8080";
         System.out.println("Using proxy: " + host + ":" + port);
@@ -36,7 +34,7 @@ public class ImageGrabber {
         String sb = "";
         for (ImdbData data : rest) {
             count++;
-            String fn = data.getTitle() + "_" + data.getId();
+            String fn = ""+ data.getId();
             fn = fn.trim();
             fn = fn.replace(' ', '-');
             fn = fn.replace(':', '-');
@@ -45,8 +43,10 @@ public class ImageGrabber {
             fn = fn.replace(',', '-');
 
             try {
-                if (count % 100 == 0) {
-                    Thread.sleep(500);
+                if (count % 10 == 0) {
+                    csv.flush();
+                    Thread.sleep(1);
+                    return ;
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(ImageGrabber.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,31 +59,33 @@ public class ImageGrabber {
                 System.out.println(fileName);
                 //Code to download
                 InputStream in = new BufferedInputStream(link.openStream());
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
                 byte[] buf = new byte[1024];
                 int n = 0;
                 while (-1 != (n = in.read(buf))) {
-                    out.write(buf, 0, n);
+                    output.write(buf, 0, n);
                 }
-                out.close();
+                output.close();
                 in.close();
-                byte[] response = out.toByteArray();
+                byte[] UrlResponse = output.toByteArray();
 
                 FileOutputStream fos = new FileOutputStream(fileName);
-                fos.write(response);
+                fos.write(UrlResponse);
                 fos.close();
-                sb += data.getId() + "," + fn + ".jpg";
-                csv.write(data.getId() + "," + fn + ".jpg\n");
+                sb = "Update into `imdb_data` SET `IMAGE`='"+fn+".jpg' WHERE `ID`='"+data.getId()+"';\n";
+                System.out.println("Dowloaded.. "+data.getId()+":\t"+data.getTitle());
+                csv.write(sb);
             } catch (Exception e) {
-                System.out.println(data.getTitle() + data.getId() + " could not do...");
-                sb += data.getId() + ", NA.jpg\n";
-                csv.write(data.getId().toString() + ", NA.jpg\n");
+                count--;
+                System.out.println(data.getTitle() +"  Id:"+ data.getId() + " could not be downloaded...");
+                //sb = data.getId() + ", NA.jpg\n";
+                csv.write("--"+data.getId().toString() + ", NA.jpg\n");
                 csv.flush();
                 continue;
             }
-            
             //End download code
-            //System.out.println("Finished");
         }
+        csv.flush();
+        System.out.println("Finished");
     } 
 }
