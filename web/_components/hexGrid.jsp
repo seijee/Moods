@@ -18,21 +18,14 @@
         .fnt0 {font-weight:normal; text-align: center; font-size:333.335px;font-family:'Arial'}
         .hidden{display: none;}
     </style>
-</head>
-<body>
-    <svg id="hexGrid" xmlns="http://www.w3.org/2000/svg"  version="1.1"
-viewBox="0 0 1100 410" preserveAspectRatio="xMidYMid meet"
- xmlns:xlink="http://www.w3.org/1999/xlink">
-    <defs id="svgDefs">
-    </defs>
-    </svg>
     
     <script>
         function createLink (title,description,bgImg,href,id,x,y,width){
             var link = document.createElementNS("http://www.w3.org/2000/svg", 'a');
-            link.setAttribute('class','hex');
-            
             var image = document.createElementNS("http://www.w3.org/2000/svg", 'image');
+            var desc = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+            
+            //setting the image...
             image.setAttributeNS(null,'width',width);
             var height = width/0.866025;
             image.setAttributeNS(null,'height',height);
@@ -42,13 +35,18 @@ viewBox="0 0 1100 410" preserveAspectRatio="xMidYMid meet"
             image.setAttributeNS(null,'y',y-height/2);
             image.setAttributeNS(null,'preserveAspectRatio',"none");
             
+            //setting description
+            desc.setAttribute('class','description hidden');
+            desc.textContent = description;
             
+            //assembling everything...
+            link.setAttribute('class','hex');
             link.appendChild(image);
-            //var side = width/2;
+            link.appendChild(desc);
             link.appendChild(createHexagon(x,y,width));
             createClipPath(id, x , y, width);            
             link.setAttribute('clip-path', 'url(#'+id+')');
-            link.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', "content.jsp");
+            link.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', href);
             return link;
         }
         
@@ -76,65 +74,8 @@ viewBox="0 0 1100 410" preserveAspectRatio="xMidYMid meet"
             
             return hexagon;
         }
-        function createHexagon1(x,y,a){ // to be used for horiz hexagons
-            root3aBy2 = a*0.866025;
-            aBy2 = a/2;
-            
-            points =(-a+x)       +","+  (y)    + " ";
-            points += (-aBy2+x)  +","+  (root3aBy2+y) + " ";
-            points += (aBy2+x)   +","+  (root3aBy2+y)+ " ";
-            points +=  (a+x)     +","+  (y)   + " ";
-            points += (aBy2+x)   +","+  (-root3aBy2+y)+ " ";
-            points += (-aBy2+x)  +","+  (-root3aBy2+y);
-           
-            var hexagon = document.createElementNS("http://www.w3.org/2000/svg", 'polygon');
-            hexagon.setAttribute('points', points);
-            hexagon.setAttribute('class','fil0');
-            
-            return hexagon;
-        }
-        
-        var mySVG = document.getElementById("hexGrid");
-        width= 200;padding = 5;
-        h = width/2; v=(width/0.866025);
-        row=0.5;count=0;
-        <%for (int i=0; i<10; i++){%>
-            mySVG.appendChild(createLink("title","description","./img/hex.jpg","href","id"+count, h  , row*v,width-padding));
-            h+=width;count++;
-            <%if (i==4){%> row+=0.75;h=width;<%}%>
-        <%}%>
-        
-        
-        /****** code for horizontal hex******/
-        /*var mySVG = document.getElementById("hexGrid");
-        width= 200;padding = 5;
-        h = width/2; v=(width*1.73205080757)/4;
-        row=0;count=0;
-        <%//for (int i=0; i<2; i++){%>
-        <%// if (i==1){%>
-        
-        <%//}%>
-            
-        mySVG.appendChild(createLink("title","description","href","id"+count,  h  , row+ v,width-padding));
-        count++;
-        <%// if (i!=1){%>
-            mySVG.appendChild(createLink("title","description","href","id"+count,2.5*h, row+2*v,width-padding));
-            count++;
-        <%//}%>
-        mySVG.appendChild(createLink("title","description","href","id"+count,  4*h, row+v,width-padding));
-        count++;
-        <%// if (i!=1){%>
-        mySVG.appendChild(createLink("title","description","href","id"+count,5.5*h, row+2*v,width-padding));
-        count++;
-        <%//}%>
-        mySVG.appendChild(createLink("title","description","href","id"+count,  4*h, row+v,width-padding));
-        count++;
-        mySVG.appendChild(createLink("title","description","href","id"+count,7*h, row+v,width-padding));
-        count++;
-        
-        row+=2*v;
-        <%// } %>
-        */
+       /****** code for horizontal hex******/
+        //refer to "selection of description on the basis of length, product description..." commit on Sep 21
 </script>
 
 <!--svg id="hexGrid" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"

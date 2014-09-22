@@ -89,7 +89,7 @@ a{
     }
 }
 
-/*****for screen size gt 800px   ******/
+/***** for screen size gt 800px   ******/
 @media screen and (min-width: 800px) { 
     #hexGridWrapper{
         width: 60%;
