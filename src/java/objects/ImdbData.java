@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import static objects.ImdbData.IMDB_FIND_BY_RATING_RANGE;
+import static objects.ImdbData.IMDB_FIND_BY_RATING_RANGEMOOD;
 import org.eclipse.jdt.internal.compiler.impl.Constant;
 
 /**
@@ -24,12 +25,14 @@ import org.eclipse.jdt.internal.compiler.impl.Constant;
     @NamedQuery(name = "ImdbData.findByTitle", query = "SELECT i FROM ImdbData i WHERE i.title = :title"),
     @NamedQuery(name = "ImdbData.findByVotes", query = "SELECT i FROM ImdbData i WHERE i.votes = :votes"),
     @NamedQuery(name = "ImdbData.findByRating", query = "SELECT i FROM ImdbData i WHERE i.rating > :rating"),
+    @NamedQuery(name =  IMDB_FIND_BY_RATING_RANGEMOOD , query = "SELECT i FROM ImdbData i WHERE (i.moodOne=:mood OR i.moodTwo=:mood OR i.moodThree=:mood) AND i.rating >= :minRating AND i.rating < :maxRating"),
     @NamedQuery(name =  IMDB_FIND_BY_RATING_RANGE , query = "SELECT i FROM ImdbData i WHERE i.rating >= :minRating AND i.rating < :maxRating"),
     @NamedQuery(name = "ImdbData.findByImage", query = "SELECT i FROM ImdbData i WHERE i.image = :image"),
     @NamedQuery(name = "ImdbData.findByActors", query = "SELECT i FROM ImdbData i WHERE i.actors = :actors"),
     @NamedQuery(name = "ImdbData.findByGenre", query = "SELECT i FROM ImdbData i WHERE i.genre = :genre")})
 public class ImdbData implements Serializable {
     public static final String IMDB_FIND_BY_RATING_RANGE = "ImdbData.findByRatingRange";
+    public static final String IMDB_FIND_BY_RATING_RANGEMOOD = "ImdbData.findByRatingRangeAndMood";
     public static final String GET_ALL = "findAll";
     private static final long serialVersionUID = 1L;
     @Id
@@ -58,7 +61,15 @@ public class ImdbData implements Serializable {
     @Basic(optional = false)
     @Column(name = "GENRE")
     private String genre;
-    
+    @Basic(optional = true)
+    @Column(name = "MOOD_ONE")
+    private String moodOne;
+    @Basic(optional = true)
+    @Column(name = "MOOD_TWO")
+    private String moodTwo;
+    @Basic(optional = true)
+    @Column(name = "MOOD_THREE")
+    private String moodThree;
     
     public ImdbData() {
     }
@@ -67,7 +78,7 @@ public class ImdbData implements Serializable {
         this.id = id;
     }
 
-    public ImdbData(Integer id, String imdbId, String title, int votes, float rating, String image, String actors, String genre) {
+    public ImdbData(Integer id, String imdbId, String title, int votes, float rating, String image, String actors, String genre, String moodOne, String moodTwo, String moodThree) {
         this.id = id;
         this.imdbId = imdbId;
         this.title = title;
@@ -77,6 +88,8 @@ public class ImdbData implements Serializable {
         this.actors = actors;
         this.genre = genre;
     }
+
+    
 
     public Integer getId() {
         return id;
@@ -140,6 +153,30 @@ public class ImdbData implements Serializable {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public String getMoodOne() {
+        return moodOne;
+    }
+
+    public void setMoodOne(String moodOne) {
+        this.moodOne = moodOne;
+    }
+
+    public String getMoodTwo() {
+        return moodTwo;
+    }
+
+    public void setMoodTwo(String moodTwo) {
+        this.moodTwo = moodTwo;
+    }
+
+    public String getMoodThree() {
+        return moodThree;
+    }
+
+    public void setMoodThree(String moodThree) {
+        this.moodThree = moodThree;
     }
 
     @Override

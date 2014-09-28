@@ -42,7 +42,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class PaapiCall {
-    private static Logger LOG = Logger.getLogger(ItemLookupSample.class);
+    private static Logger LOG = Logger.getLogger(PaapiCall.class);
+    
+    
     private static final String AWS_ACCESS_KEY_ID = "AKIAJDVM2PUZ2TV4ENLQ";
 
     private static final String AWS_SECRET_KEY = "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";

@@ -43,7 +43,6 @@
         
         <div class="tile-area" style="width: 80%;margin:0 10% " >
         <%
-            ImdbDBController.UpdateMovieCache();
             List<ImdbData> rest = ImdbDBController.getCache();
             rest.clear();
         %>

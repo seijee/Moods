@@ -31,7 +31,9 @@
         <br/>
         <%
                 int pageNo = 0, limit = 15;
-                String orderBy = "RATING";
+                String orderBy = "RATING", mood = "test";
+                
+                //initialize default settings
                 try{pageNo = Integer.parseInt(request.getParameter("pageNo"));}
                 catch(Exception e) {pageNo = 0;}
                 try {limit = Integer.parseInt(request.getParameter("limit"));}
@@ -39,15 +41,17 @@
                 try {orderBy = request.getParameter("orderBy");}
                 catch(Exception e){orderBy = "RATING";}
                 
+                try {mood = request.getParameter("mood");}
+                catch(Exception e){mood = "test";}
+                
                 if (pageNo < 0) pageNo=0;
                 if (limit<10) limit = 10;
 
         %>
         <div class="tile-area" style="width: 80%;margin:0 10%" >
         <%
-            List<ImdbData> list = ImdbDBController.getCache();
-            
-            for (int i = pageNo*limit; i<pageNo*limit+limit; i++){
+            List<ImdbData> list = ImdbDBController.getCache(mood);
+            for (int i = pageNo*limit; i<pageNo*limit+limit && i<list.size(); i++){
                 ImdbData movie = list.get(i);
         %>
         <a onclick='showDetails(this,"<%=movie.getId() %>")' style="display:none" class="tile">
@@ -60,13 +64,14 @@
         </a>
         <%  } %> 
         </div>
-        <a class="p-navigation left" href="?limit=<%=limit%>&pageNo=<%=pageNo-1%>&orderBy=<%=orderBy%>">
+        <a class="p-navigation left" href="?limit=<%=limit%>&pageNo=<%=pageNo-1%>&orderBy=<%=orderBy%>&mood=<%=mood%>">
             <i class="fa fa-chevron-left fa-5x"></i>
         </a>
-        <a class="p-navigation right" href="?limit=<%=limit%>&pageNo=<%=pageNo+1%>&orderBy=<%=orderBy%>">
+        <a class="p-navigation right" href="?limit=<%=limit%>&pageNo=<%=pageNo+1%>&orderBy=<%=orderBy%>&mood=<%=mood%>">
             <i class="fa fa-chevron-right fa-5x"></i>
         </a>
         <p id="res"></p>
+        </div>
         <script src="./js/jquery-1.11.1.js"></script>
         <script src="./js/Modal.js"></script>
         <script>
@@ -74,7 +79,7 @@
 $(document).ready(function(){
     $i=0;
     $(".tile").each(function (e){
-        $(this).delay($i*25).fadeIn(800);
+        $(this).delay($i*35).fadeIn(800);
         $i++;
     });
 });

@@ -73,7 +73,7 @@ public class NewImageGrabber extends HttpServlet {
             fn = fn.replace(',', '-');
 
             try {
-                if (count % 10 == 0) {
+                if (count % 2 == 0) {
                     csv.flush();
                     Thread.sleep(10);
                     return ;
