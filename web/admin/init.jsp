@@ -43,8 +43,7 @@
         
         <div class="tile-area" style="width: 80%;margin:0 10% " >
         <%
-            List<ImdbData> rest = ImdbDBController.getCache();
-            rest.clear();
+            ImdbDBController.resetAllBucketCache();
         %>
         Done!
         </div>

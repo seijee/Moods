@@ -19,16 +19,7 @@
         <title>Content</title>
     </head>
     <body>
-        <%@include file="_components/navbar.jsp" %>
-        <div id="backdrop" onclick="hideModal()">
-            <div class="modal" onclick="event.stopPropagation();" id='myModal'>
-                <div class='bgImage'></div>
-                <p id="movieDescription">Loading...</p>
-                <i onclick='hideModal()' class="close fa fa-times fa-1x"></i>
-            </div>
-        </div>
-        
-        <br/>
+        <%@include file="_components/navbar.jsp" %><br/>
         <%
                 int pageNo = 0, limit = 15;
                 String orderBy = "RATING", mood = "test";
@@ -71,7 +62,18 @@
             <i class="fa fa-chevron-right fa-5x"></i>
         </a>
         <p id="res"></p>
+        
+        
+        <div id="backdrop" onclick="hideModal()">
+            
+            <div class="modal" onclick="event.stopPropagation();" id='myModal'>
+                <div class='bgImage'></div>
+                <p id="movieDescription">Loading...</p>
+                <i onclick='hideModal()' class="close fa fa-times fa-2x"></i>
+            </div>
         </div>
+        
+        
         <script src="./js/jquery-1.11.1.js"></script>
         <script src="./js/Modal.js"></script>
         <script>

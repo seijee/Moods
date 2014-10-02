@@ -24,7 +24,7 @@ public class ImdbDBController {
     private static List<ImdbData> aboveNineOld=null, aboveEightOld=null, belowEightOld=null;
     private static List<ImdbData> cachedMovies = null;
     private static HashMap<String, List<ImdbData>> moodBuckets;
-    
+
     @Deprecated
     public static void retrieveData (){
         Session s = Conn.getSf().openSession();
@@ -87,9 +87,14 @@ public class ImdbDBController {
         }
     }
     
+    public static void resetAllBucketCache() {
+        moodBuckets = new HashMap<String, List<ImdbData>>();
+    }
     
     public static void updateBucket (String mood){
-        moodBuckets.putIfAbsent(mood, new ArrayList<ImdbData>());
+        if (!moodBuckets.containsKey(mood)){
+            moodBuckets.put(mood, new ArrayList<ImdbData>());
+        }
         moodBuckets.get(mood).clear();
         List<ImdbData> aboveNine=new ArrayList<ImdbData>(),
                        aboveEight=new ArrayList<ImdbData>(),
@@ -132,9 +137,14 @@ public class ImdbDBController {
     
     public static List<ImdbData> getCache(String mood) {
         if (moodBuckets==null){moodBuckets = new HashMap<String, List<ImdbData>>();}
-        moodBuckets.putIfAbsent(mood, new ArrayList<ImdbData>());
+        if (!moodBuckets.containsKey(mood)){
+            moodBuckets.put(mood, new ArrayList<ImdbData>());
+        }
         if (moodBuckets.get(mood).isEmpty()){
            updateBucket(mood);
+           if (moodBuckets.get(mood).isEmpty()){ //is still empty.. we dont need an empty bucket. destroy
+               moodBuckets.remove(mood);
+           }
         }
         LOG.info(moodBuckets);
         return moodBuckets.get(mood);
@@ -145,8 +155,6 @@ public class ImdbDBController {
         if (cachedMovies==null || cachedMovies.isEmpty()) UpdateMovieCache();
         return cachedMovies;
     }
-
-
 }
 
 

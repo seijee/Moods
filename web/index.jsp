@@ -63,7 +63,7 @@
             h = width/2; v=(width/0.866025);
             row=0.5;count=0;
             for ($i=0; $i<10; $i++){
-                mySVG.appendChild(createLink("title",descArray[$i],"./img/hex.jpg","content.jsp","id"+count, h  , row*v,width-padding));
+                mySVG.appendChild(createLink("title",descArray[$i],"./img/hex.jpg","content.jsp?mood=test","id"+count, h  , row*v,width-padding));
                 h+=width;count++;
                 if ($i==4){ row+=0.75;h=width;}
             }

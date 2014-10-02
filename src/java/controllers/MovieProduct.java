@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package objects;
+package controllers;
 
 import java.io.Serializable;
 import java.util.ArrayList;

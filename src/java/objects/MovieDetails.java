@@ -19,17 +19,23 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import static objects.MovieDetails.GET_BY_ID;
+import static objects.MovieDetails.GET_BY_TITLE;
 
 /**
  *
  * @author seijee
  */
 @Entity
-@Table(name = "moviedetails", catalog = "Movies", schema = "")
+@Table(name = "moviedetails")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Moviedetails.findAll", query = "SELECT m FROM Moviedetails m")})
+    @NamedQuery(name = GET_BY_ID, query = "SELECT m FROM MovieDetails m WHERE m.movieId = :MovieId"),
+    @NamedQuery(name = GET_BY_TITLE, query = "SELECT m FROM MovieDetails m WHERE m.title = :title")
+})
 public class MovieDetails implements Serializable {
+    public static final String GET_BY_ID = "Moviedetails.findById";
+    public static final String GET_BY_TITLE = "Moviedetails.findByTitle";
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -65,51 +71,7 @@ public class MovieDetails implements Serializable {
         this.movieId = movieId;
         this.title = title;
     }
-    public MovieDetails (ImdbData myMovie){
-        this.movieId = myMovie.getId();
-        this.title = myMovie.getTitle();
-        SelectDetails(myMovie);
-    }
-    private void SelectDetails (ImdbData Movie){
-        List<MovieProduct> mProducts = paapi.PaapiCall.itemSearch(Movie.getTitle(), Movie.getActors(), "");
-//        ArrayList<String>   Descriptions = new ArrayList<String>(),
-//                            Sources= new ArrayList<String>();
-        HashMap<String, String> desc = new HashMap<String, String>();
-        for (MovieProduct mp : mProducts){
-            for (int i=0; i<mp.getDescriptionSources().size(); i++){
-                if (mp.getProductGroup().equalsIgnoreCase("DVD"))
-                desc.put(mp.getDescriptionSources().get(i), mp.getDescriptions().get(i));
-            }
-        }
-        SelectDescription(desc);
-    }
-    private void SelectDescription (HashMap<String,String> map ){
-        String tempDesc = "";
-        System.out.println("Extractiong description");
-        description = "";
-        for (String key : map.keySet()){
-            if (key.toLowerCase().contains("amazon.com")){
-                description = map.get(key);
-                break;
-            }else{
-                if (description.length() < map.get(key).length()){
-                    description = map.get(key);
-                }
-            }
-        }
-        
-//        for (int i=0; i<Sources.size() ; i++){
-//            if (Sources.get(i).contains("amazon.com")){
-//                description = Descriptions.get(i);
-//                System.out.println(description);
-//            }else if (tempDesc.length() < Descriptions.get(i).length()){
-//                tempDesc = Descriptions.get(i);
-//            }
-//        }
-//        if (description==null){
-//            description = tempDesc;
-//        }
-    }
+    
     
     //<editor-fold defaultstate="collapsed" desc="Getters Setters">
     
@@ -205,12 +167,29 @@ public class MovieDetails implements Serializable {
         return true;
     }
 
+    
+//    @Override
+//    public String toString() {
+//        String response = "";
+//        int ind = controllers.ImdbDBController.getCache().indexOf(new ImdbData(movieId));
+//        response += controllers.ImdbDBController.getCache().get(ind).toString();
+//        return response + "<br/>"+description;
+//    }
+
     @Override
     public String toString() {
-        String response = "";
-        int ind = controllers.ImdbDBController.getCache().indexOf(new ImdbData(movieId));
-        response += controllers.ImdbDBController.getCache().get(ind).toString();
-        return response + "<br/>"+description;
+        String response = "[" + movieId + "]" + title;
+        
+        if (dvdLink!=null){
+        response += "<br/><a target='_blank' href='"+ dvdLink +"'>DVD [" +
+                dvdAsin + "]</a> Price :" + dvdPrice; 
+        }
+        if (instantVlink!=null){
+        response += "<br/><a target='_blank' href='"+ instantVlink +"'>Instant Video [" +
+                instantVasin + "]</a> Price :" + instantVprice;
+        }
+        response += "<br/><hr/>" + description ;
+        return response;
     }
     
 }

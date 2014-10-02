@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="objects.MovieDetails"%>
-<%@page import="objects.MovieProduct"%>
+<%@page import="controllers.MovieProduct"%>
 <%@page import="java.util.List"%>
 <%@page import="objects.ImdbData"%>
 <%@page import="controllers.ImdbDBController"%>
@@ -18,7 +18,7 @@
         myMovie = list.get(list.indexOf(myMovie));
     }
     
-    MovieDetails md = new MovieDetails(myMovie);
+    MovieDetails md = controllers.MovieDetailsController.GetMovieDetails(myMovie);
     
     response.getWriter().print(md);
     /*List<MovieProduct> mdList = paapi.PaapiCall.itemSearch(myMovie.getTitle(), "", "");

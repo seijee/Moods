@@ -5,8 +5,8 @@
     <class>objects.ImdbData</class>
     <class>objects.NewEntity</class>
     <class>objects.Testtable</class>
-    <class>objects.MovieProduct</class>
     <class>objects.MovieDetails</class>
+    <class>controllers.MovieProduct</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/Movies"/>

@@ -5,6 +5,7 @@
 package factory;
 
 import objects.ImdbData;
+import objects.MovieDetails;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
@@ -21,6 +22,7 @@ public class Conn {
                         configure().
                         //addPackage("com.xyz") //add package if used.
                         addAnnotatedClass(ImdbData.class).
+                        addAnnotatedClass(MovieDetails.class).
                         buildSessionFactory();
             } catch (Throwable ex) {
                 System.err.println("Failed to create sessionFactory object." + ex);
