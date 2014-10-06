@@ -9,7 +9,11 @@ body{
 a{
     text-decoration: none;
 }
-
+#state{
+    display: none;
+    height: 0px;width: 0px;
+    margin: 0px; padding: 0px;
+}
 .tile-area {
 	position:relative;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
@@ -195,3 +199,4 @@ a{
         margin: 0px;
     }
 }
+

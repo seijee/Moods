@@ -34,7 +34,7 @@ public class ImdbDBController {
             aboveNineOld = q.list();
             q = s.getNamedQuery(ImdbData.IMDB_FIND_BY_RATING_RANGEMOOD).setFloat("minRating", 8).setFloat("maxRating", 9).setString("mood","test");
             aboveEightOld = q.list();
-            q = s.getNamedQuery(ImdbData.IMDB_FIND_BY_RATING_RANGEMOOD).setFloat("minRating", 0).setFloat("maxRating", 8).setString("mood", "test");
+            q = s.getNamedQuery(ImdbData.IMDB_FIND_BY_RATING_RANGEMOOD).setFloat("minRating", 4.5f).setFloat("maxRating", 8).setString("mood", "test");
             belowEightOld = q.list();
             s.getTransaction().commit();  
         }catch(Throwable ex){
@@ -108,7 +108,7 @@ public class ImdbDBController {
             aboveNine = q.list();
             q = s.getNamedQuery(ImdbData.IMDB_FIND_BY_RATING_RANGEMOOD).setFloat("minRating", 8).setFloat("maxRating", 9).setString("mood",mood);
             aboveEight = q.list();
-            q = s.getNamedQuery(ImdbData.IMDB_FIND_BY_RATING_RANGEMOOD).setFloat("minRating", 0).setFloat("maxRating", 8).setString("mood", mood);
+            q = s.getNamedQuery(ImdbData.IMDB_FIND_BY_RATING_RANGEMOOD).setFloat("minRating", 4.5f).setFloat("maxRating", 8).setString("mood", mood);
             belowEight = q.list();
             s.getTransaction().commit();
         }catch(Throwable ex){

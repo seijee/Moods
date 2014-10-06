@@ -20,71 +20,40 @@
     </head>
     <body>
         <%@include file="_components/navbar.jsp" %><br/>
-        <%
-                int pageNo = 0, limit = 15;
-                String orderBy = "RATING", mood = "test";
-                
-                //initialize default settings
-                try{pageNo = Integer.parseInt(request.getParameter("pageNo"));}
-                catch(Exception e) {pageNo = 0;}
-                try {limit = Integer.parseInt(request.getParameter("limit"));}
-                catch(Exception e){limit = 15;}
-                try {orderBy = request.getParameter("orderBy");}
-                catch(Exception e){orderBy = "RATING";}
-                
-                try {mood = request.getParameter("mood");}
-                catch(Exception e){mood = "test";}
-                
-                if (pageNo < 0) pageNo=0;
-                if (limit<10) limit = 10;
-
-        %>
-        <div class="tile-area" style="width: 80%;margin:0 10%" >
-        <%
-            List<ImdbData> list = ImdbDBController.getCache(mood);
-            for (int i = pageNo*limit; i<pageNo*limit+limit && i<list.size(); i++){
-                ImdbData movie = list.get(i);
-        %>
-        <a onclick='showDetails(this,"<%=movie.getId() %>")' style="display:none" class="tile">
-            <div class="tile-content" style="background-image: url('<%= movie.getImage() %>'); ">
-                
-                <div class="title">
-                    (<%= movie.getRating() %>)<b> <%= movie.getTitle()%></b>
-                </div>
-            </div>
-        </a>
-        <%  } %> 
+        
+        <div id="movieTiles" class="tile-area" style="width: 80%;margin:0 10%" >
+            <% 
+                String mood="";
+                try{ mood =request.getParameter("mood");}
+                catch (Exception e){mood="";}
+            %>
+            <form id="state" name="state">
+                <input type="text" name="mood" value="<%=mood%>" readonly="true"/>
+                <input type="text" name="pageNo" value="-1"  readonly="true" />
+                <input type="text" name="limit" value="15" readonly="true" />
+            </form>
         </div>
-        <a class="p-navigation left" href="?limit=<%=limit%>&pageNo=<%=pageNo-1%>&orderBy=<%=orderBy%>&mood=<%=mood%>">
-            <i class="fa fa-chevron-left fa-5x"></i>
-        </a>
-        <a class="p-navigation right" href="?limit=<%=limit%>&pageNo=<%=pageNo+1%>&orderBy=<%=orderBy%>&mood=<%=mood%>">
-            <i class="fa fa-chevron-right fa-5x"></i>
-        </a>
-        <p id="res"></p>
         
+        <a id="nav-left" class="p-navigation left" onclick="loadPrevPage()">
+        <i class="fa fa-chevron-left fa-5x"></i>
+        </a>
+        <a id="nav-right" class="p-navigation right" onclick="loadNextPage()">
+        <i class="fa fa-chevron-right fa-5x"></i>
+        </a>
         
-        <div id="backdrop" onclick="hideModal()">
-            
+        <div id="backdrop" onclick="hideModal()">    
             <div class="modal" onclick="event.stopPropagation();" id='myModal'>
                 <div class='bgImage'></div>
                 <p id="movieDescription">Loading...</p>
                 <i onclick='hideModal()' class="close fa fa-times fa-2x"></i>
             </div>
         </div>
-        
-        
         <script src="./js/jquery-1.11.1.js"></script>
         <script src="./js/Modal.js"></script>
         <script>
-//initial fade effect of tiles
-$(document).ready(function(){
-    $i=0;
-    $(".tile").each(function (e){
-        $(this).delay($i*35).fadeIn(800);
-        $i++;
-    });
-});
+        $(document).ready(function(){
+            loadNextPage();
+        });
         </script>
     </body>
 </html>

@@ -13,11 +13,55 @@ function hideModal (){
     });
 }
 
-function isEmpty( el ){
-      return !$.trim(el.html());
-  }
-  
-function showDetails($tile , $id){
+function animateTiles(){
+    $i=0;
+    $(".tile").each(function (e){
+        $(this).delay($i*35).fadeIn(800);
+        $i++;
+    });
+}
+
+function loadNextPage($showDetails){
+    $mood = document.forms["state"]["mood"].value;
+    $pageNo = document.forms["state"]["pageNo"].value;
+    $limit = document.forms["state"]["limit"].value;
+
+    AJAXgetMovieList($mood, $pageNo+1, $limit, $showDetails);
+}
+function loadPrevPage($showDetails){
+    $mood = document.forms["state"]["mood"].value;
+    $pageNo = document.forms["state"]["pageNo"].value;
+    $limit = document.forms["state"]["limit"].value;
+    
+    AJAXgetMovieList($mood, $pageNo-1, $limit, $showDetails);
+}
+
+function AJAXgetMovieList($mood,$pageNo,$limit,$showDetails){
+    $("#movieTiles").html("Fetching Suggestions... <i class='fa fa-lemon-o fa-spin fa-6x'></i>");
+    
+    var request = $.ajax({
+        url: "MovieAJAX.jsp",
+        type: "POST",
+        data: {mood: $mood, pageNo: $pageNo, limit: $limit, task: "getMovieList"},
+        dataType: "html"
+    });
+    request.done(function( msg ) {
+        $("#movieTiles").html(msg);
+    });
+    
+    request.always (function (){
+        $("#movieTiles").ready(function (){
+            animateTiles();
+            if ($showDetails==="first"){
+                $(".tile").first().click();
+            }else if ($showDetails==="last"){
+                $(".tile").last().click();
+            }
+        });
+    });
+}
+
+function showDetails($tile , $id , $mood){
     $( "#movieDescription" ).html( "<i class='fa fa-refresh fa-spin fa-3x'></i> Loading..." );
     displayModal($("#myModal"));
     $("#myModal").find(".bgImage").css("background-image",$($tile).find(".tile-content").css("background-image"));
@@ -25,7 +69,7 @@ function showDetails($tile , $id){
     var request = $.ajax({
         url: "MovieAJAX.jsp",
         type: "POST",
-        data: { id : $id },
+        data: { id : $id , mood: $mood, task: "getMovieDetails"},
         dataType: "html"
     });
     
@@ -44,18 +88,22 @@ function showDetails($tile , $id){
         if (evt.keyCode === 39){
             $(document).unbind('keydown');
             if (isEmpty($($tile).next(".tile"))){
-                alert("redirect to next page...");
-            }
+                loadNextPage("first");
+            }else
             ($($tile).next(".tile")).click();
         }
         if (evt.keyCode === 37){
             $(document).unbind('keydown');
             if (isEmpty($($tile).prev(".tile"))){
-                alert("redirect to previous page...");
-            }
+                loadPrevPage("last");
+            }else
             ($($tile).prev(".tile")).click();
         }
         $("#backdrop").focus();
         });
     });
+}
+
+function isEmpty( el ){
+    return !$.trim(el.html());
 }

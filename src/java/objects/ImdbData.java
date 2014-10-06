@@ -18,16 +18,17 @@ import org.eclipse.jdt.internal.compiler.impl.Constant;
 @Table(name = "imdb_data")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Imdb.findAll", query = "SELECT i FROM ImdbData i ORDER BY :order"),
-    @NamedQuery(name = "ImdbData.findById", query = "SELECT i FROM ImdbData i WHERE i.id = :id"),
-    @NamedQuery(name = "ImdbData.findByImdbId", query = "SELECT i FROM ImdbData i WHERE i.imdbId = :imdbId"),
-    @NamedQuery(name = "ImdbData.findByTitle", query = "SELECT i FROM ImdbData i WHERE i.title = :title"),
-    @NamedQuery(name = "ImdbData.findByVotes", query = "SELECT i FROM ImdbData i WHERE i.votes = :votes"),
-    @NamedQuery(name = "ImdbData.findByRating", query = "SELECT i FROM ImdbData i WHERE i.rating > :rating"),
-    @NamedQuery(name =  IMDB_FIND_BY_RATING_RANGEMOOD , query = "SELECT i FROM ImdbData i WHERE (i.moodOne=:mood OR i.moodTwo=:mood OR i.moodThree=:mood) AND i.rating >= :minRating AND i.rating < :maxRating"),
-    @NamedQuery(name = "ImdbData.findByImage", query = "SELECT i FROM ImdbData i WHERE i.image = :image"),
-    @NamedQuery(name = "ImdbData.findByActors", query = "SELECT i FROM ImdbData i WHERE i.actors = :actors"),
-    @NamedQuery(name = "ImdbData.findByGenre", query = "SELECT i FROM ImdbData i WHERE i.genre = :genre")})
+//    @NamedQuery(name = "Imdb.findAll", query = "SELECT i FROM ImdbData i ORDER BY :order")
+//    ,@NamedQuery(name = "ImdbData.findById", query = "SELECT i FROM ImdbData i WHERE i.id = :id")
+//    ,@NamedQuery(name = "ImdbData.findByImdbId", query = "SELECT i FROM ImdbData i WHERE i.imdbId = :imdbId")
+//    ,@NamedQuery(name = "ImdbData.findByTitle", query = "SELECT i FROM ImdbData i WHERE i.title = :title")
+//    ,@NamedQuery(name = "ImdbData.findByVotes", query = "SELECT i FROM ImdbData i WHERE i.votes = :votes")
+//    ,@NamedQuery(name = "ImdbData.findByRating", query = "SELECT i FROM ImdbData i WHERE i.rating > :rating")
+    @NamedQuery(name =  IMDB_FIND_BY_RATING_RANGEMOOD , query = "SELECT i FROM ImdbData i WHERE (i.moodOne=:mood OR i.moodTwo=:mood OR i.moodThree=:mood) AND i.rating >= :minRating AND i.rating < :maxRating")
+//    ,@NamedQuery(name = "ImdbData.findByImage", query = "SELECT i FROM ImdbData i WHERE i.image = :image")
+//    ,@NamedQuery(name = "ImdbData.findByActors", query = "SELECT i FROM ImdbData i WHERE i.actors = :actors")
+//    ,@NamedQuery(name = "ImdbData.findByGenre", query = "SELECT i FROM ImdbData i WHERE i.genre = :genre")
+})
 public class ImdbData implements Serializable {
     public static final String IMDB_FIND_BY_RATING_RANGEMOOD = "ImdbData.findByRatingRangeAndMood";
     public static final String GET_ALL = "findAll";
@@ -198,12 +199,12 @@ public class ImdbData implements Serializable {
 
     @Override
     public String toString() {
-        String sb = "\nId : "+id;
+        String sb = "Id : "+id;
         sb += "<br/>IMDB ID : "+imdbId;
         sb += "<br/>Title : "+title;
         sb += "<br/>Genre : "+genre;
         sb += "<br/>Actors : "+actors;
-        sb += "<br/>Image Url : "+image;
+        sb += "<br/>Image Url : "+image+"\n";
         return sb;
     }
 }
