@@ -31,16 +31,16 @@ public class MovieDetailsController {
         
         movieDetails.setMovieId(myMovie.getId());
         movieDetails.setTitle( myMovie.getTitle());
-        List<MovieProduct> mProducts = paapi.PaapiCall.itemSearch(myMovie.getTitle(), myMovie.getActors(), "");
+        List<MovieProduct> mProducts = paapi.PaapiCall.itemSearch("", myMovie.getActors(), myMovie.getTitle());
         
         movieDetails.setDescription(SelectDescription(mProducts, movieDetails));
-        if (movieDetails.getDescription()==""){
-            mProducts = paapi.PaapiCall.itemSearch(myMovie.getTitle(),"", "");
-            movieDetails.setDescription(SelectDescription(mProducts, movieDetails));
-        }
+//        if (movieDetails.getDescription()==""){
+//            mProducts = paapi.PaapiCall.itemSearch(myMovie.getTitle(),"", "");
+//            movieDetails.setDescription(SelectDescription(mProducts, movieDetails));
+//        }
         
         for (MovieProduct mp : mProducts){
-            if (mp.getProductGroup().equalsIgnoreCase("DVD")){
+            if (mp.getBinding().equalsIgnoreCase("DVD")){
                 if (comparePrice(mp.getPrice(), movieDetails.getDvdPrice())){ 
                     movieDetails.setDvdAsin( mp.getAsin());
                     movieDetails.setDvdLink(mp.getDetailPageUrl());
@@ -55,7 +55,7 @@ public class MovieDetailsController {
 //                    movieDetails.setDvdLink(mp.getDetailPageUrl());
 //                    movieDetails.setDvdPrice( mp.getPrice());
 //                }
-            }else if (mp.getBinding().equalsIgnoreCase("Amazon Instant Video")){
+            }else if (mp.getBinding().equalsIgnoreCase("Amazon Instant Video") && mp.getTitle().equalsIgnoreCase(myMovie.getTitle())){
                 movieDetails.setInstantVasin( mp.getAsin());
                 movieDetails.setInstantVlink(mp.getDetailPageUrl());
                 movieDetails.setInstantVprice(mp.getPrice());

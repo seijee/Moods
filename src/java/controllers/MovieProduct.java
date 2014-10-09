@@ -174,4 +174,16 @@ public class MovieProduct implements Serializable {
                 +"</p><div style='clear:both;'></div>"+
                 this.getDescription();
     }
+
+    public String consolePrint() {
+        return "image: "+imagelink+"\n"
+                +"ASIN = "+asin+" ; "
+                +"Title=" + title +"\n"
+                +"Price ="+price+" ; "
+                +"Binding = "+Binding+" ; "
+                +"Product Type = "+productType+" ; "
+                +"DetailPage = "+ detailPageUrl +"\n"
+                +"Discription = "+
+                this.getDescription()+"\n*********************\n";
+    }
 }

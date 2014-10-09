@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package paapi;
 
 import controllers.ImdbDBController;
@@ -46,17 +40,7 @@ public class NewImageGrabber extends HttpServlet {
         try {
         String path =  getServletContext().getRealPath("/");
         out.print(path);
-            /****************POROXY SETTINGS***********************
-        String host = "172.16.0.87";
-        String port = "8080";
-        System.out.println("Using proxy: " + host + ":" + port);
-        System.setProperty("http.proxyHost", host);
-        System.setProperty("http.proxyPort", port);
-        System.setProperty("http.proxySet", "true");
-        System.setProperty("http.nonProxyHosts", "localhost|127.0.0.1");
-        /**
-         * ****************END OF PROXY SETTINGS***************************
-         */
+        
         List<ImdbData> rest = ImdbDBController.getCache();
         //FileWriter csv = new PrintWriter(new BufferedWriter(new FileWriter("./web/movieImages/csv.txt", true)));
         FileWriter csv = new FileWriter(path+"/movieImages/csv.txt",true);
@@ -81,7 +65,7 @@ public class NewImageGrabber extends HttpServlet {
             } catch (InterruptedException ex) {
                 Logger.getLogger(ImageGrabber.class.getName()).log(Level.SEVERE, null, ex);
             }
-            String fileName = path+"/movieImages/" + fn + ".jpg"; //The file that will be saved on your computer
+            String fileName = path+"/movieImages/" + fn + ".jpg";
             URL link = null;
             try {
                 link = new URL(data.getImage());
@@ -113,7 +97,6 @@ public class NewImageGrabber extends HttpServlet {
                 csv.flush();
                 continue;
             }
-            //End download code
         }
         csv.flush();
         out.println("Finished");
@@ -122,7 +105,6 @@ public class NewImageGrabber extends HttpServlet {
             out.close();
         }
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -161,5 +143,4 @@ public class NewImageGrabber extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

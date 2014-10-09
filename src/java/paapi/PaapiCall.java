@@ -34,12 +34,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import controllers.MovieProduct;
+import java.io.IOException;
+import java.util.logging.Level;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class PaapiCall {
     private static Logger LOG = Logger.getLogger(PaapiCall.class);
@@ -55,7 +59,7 @@ public class PaapiCall {
         /*
          * Set up the signed requests helper 
          */
-    /****************POROXY SETTINGS**********************
+    /****************POROXY SETTINGS**********************/
         String host = "172.16.0.87";
         String port = "8080";
         System.out.println("Using proxy: " + host + ":" + port);
@@ -102,20 +106,56 @@ public class PaapiCall {
         // Here is an example with string form, where the requests parameters have already been concatenated
         // into a query string.
 //</editor-fold>
-
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db=null;
+        try {
+            db = dbf.newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            LOG.error(ex);
+        }
+        Document doc=null;
         LOG.info("String form example:");
-        String queryString = "Service=AWSECommerceService&AssociateTag=taqa&" +
-                            "Operation=ItemSearch&" +
-                            "Keywords="+keywords+"&"+
-                            "Title="+title+"&" +
-                            "Actor="+actor+"&"+
-                            "Condition=New&"+
-                            "SearchIndex=Video&"+
-                            "ResponseGroup=Images,ItemAttributes,EditorialReview,OfferSummary";
-        requestUrl = helper.sign(queryString);
-        LOG.info("Request is \"" + requestUrl + "\"");
+        
+        int totalPages = 1;
+        int itemPage = 1;
+        List<MovieProduct> productList = new ArrayList<MovieProduct>();
+        do{
+            String queryString = "Service=AWSECommerceService&AssociateTag=taqa&" +
+                                "Operation=ItemSearch&" +
+                                "Keywords="+keywords+"&"+
+                                "Title="+title+"&" +
+                                //"Actor="+actor+"&"+
+                                "Condition=All&"+
+                                "SearchIndex=Video&"+
+                                "ResponseGroup=Images,ItemAttributes,EditorialReview,Offers,OfferFull&"+
+                                "ItemPage="+itemPage;
+            requestUrl = helper.sign(queryString);
+            LOG.info("Request is \"" + requestUrl + "\"");
 
-        return parseXML(requestUrl);
+            try {
+                doc = db.parse(requestUrl);
+                NodeList nodeList = doc.getChildNodes();
+                if (totalPages <=1 ) totalPages = Integer.parseInt(nodeList.item(0).getChildNodes().item(1).getChildNodes().item(2).getChildNodes().item(0).getNodeValue());
+            } catch (Exception ex) {
+                LOG.error(ex);
+            }
+            productList.addAll(parseXML(requestUrl));
+            itemPage++;
+        }while (itemPage < totalPages && itemPage<11);
+        
+        
+        ArrayList<MovieProduct> toBeRemoved = new ArrayList<MovieProduct>();
+        for (MovieProduct p  : productList){
+            if (!p.getTitle().trim().equalsIgnoreCase(keywords.trim())){
+                toBeRemoved.add(p);
+                LOG.error(p.consolePrint());
+                LOG.error("One -> "+keywords);
+                LOG.error("Two -> "+p.getTitle());
+            }else
+            LOG.debug(p.consolePrint());
+        }
+        //productList.removeAll(toBeRemoved);
+        return productList;
     }
 
     /*
@@ -135,24 +175,24 @@ public class PaapiCall {
             nodeList = nodeList.item(0).getChildNodes().item(1).getChildNodes(); //All the Items in nodeList
             
             LOG.info ("totalResults = "+nodeList.item(1).getFirstChild().getNodeValue());
-            String asin, detailPageURL, Description;
             int totalResults = Integer.parseInt(nodeList.item(1).getFirstChild().getNodeValue());
             System.out.println(totalResults);
             for (int i= 4; i<nodeList.getLength()/*(totalResults+4) && i<14*/; i++){
                 md = new MovieProduct();
                 fetchDetails(nodeList.item(i).getChildNodes(), md);
                 mdl.add(md);
+                System.out.println("adfgadfgd  "+mdl.get(mdl.indexOf(md)).getTitle());
                 System.out.println("/**********************/");
             }
         } catch (Exception e) {
         	LOG.error(" ",e);
             //throw new RuntimeException(e);
         }
+        
         return mdl;
     }
     public static void fetchDetails (NodeList movie, MovieProduct md){
         for(int i=0; i<movie.getLength() ; i++){
-            
             if (movie.item(i).getNodeName().equalsIgnoreCase("ItemLinks")){
                 //ignoring item links
             }
@@ -220,7 +260,6 @@ public class PaapiCall {
                 fetchDetails(movie.item(i).getChildNodes(), md);
             }
     	}
-        //System.out.println("/*************************************/");
     }
     
     
